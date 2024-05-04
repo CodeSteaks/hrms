@@ -35,6 +35,7 @@ from hrms.hr.utils import (
 )
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 from hrms.utils import get_employee_email
+import math
 
 
 class LeaveDayBlockedError(frappe.ValidationError):
@@ -438,7 +439,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				cint(self.half_day) == 1
 				and getdate(self.half_day_date) == getdate(d.half_day_date)
 				and (
-					flt(self.total_leave_days) == 0.5
+					math.isclose(flt(self.total_leave_days), 0.5, rel_tol=1e-09, abs_tol=0.0)
 					or getdate(self.from_date) == getdate(d.to_date)
 					or getdate(self.to_date) == getdate(d.from_date)
 				)

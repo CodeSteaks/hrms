@@ -9,6 +9,7 @@ from frappe.utils import flt, get_link_to_form, now
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
+import math
 
 
 class Appraisal(Document):
@@ -146,7 +147,7 @@ class Appraisal(Document):
 			# convert goal score percentage to total score out of 5
 			total = flt(goal_score_percentage) / 20
 
-		if total_weightage and flt(total_weightage, 2) != 100.0:
+		if total_weightage and not math.isclose(flt(total_weightage, 2), 100.0, rel_tol=1e-09, abs_tol=0.0):
 			frappe.throw(
 				_("Total weightage for all {0} must add up to 100. Currently, it is {1}%").format(
 					table, total_weightage

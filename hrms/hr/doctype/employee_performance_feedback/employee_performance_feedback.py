@@ -8,6 +8,7 @@ from frappe.utils import flt, get_link_to_form
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
+import math
 
 
 class EmployeePerformanceFeedback(Document):
@@ -47,7 +48,7 @@ class EmployeePerformanceFeedback(Document):
 	def validate_total_weightage(self):
 		total_weightage = sum(flt(d.per_weightage) for d in self.feedback_ratings)
 
-		if flt(total_weightage, 2) != 100.0:
+		if not math.isclose(flt(total_weightage, 2), 100.0, rel_tol=1e-09, abs_tol=0.0):
 			frappe.throw(
 				_("Total weightage for all criteria must add up to 100. Currently, it is {0}%").format(
 					total_weightage

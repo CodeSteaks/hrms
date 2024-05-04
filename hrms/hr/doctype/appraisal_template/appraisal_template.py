@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
+import math
 
 
 class AppraisalTemplate(Document):
@@ -19,7 +20,7 @@ class AppraisalTemplate(Document):
 
 		total_weightage = sum(flt(d.per_weightage) for d in self.get(table_name))
 
-		if flt(total_weightage, 2) != 100.0:
+		if not math.isclose(flt(total_weightage, 2), 100.0, rel_tol=1e-09, abs_tol=0.0):
 			table = _("KRAs") if table_name == "goals" else _("Criteria")
 			frappe.throw(
 				_("Total weightage for all {0} must add up to 100. Currently, it is {1}%").format(

@@ -9,6 +9,7 @@ from frappe.utils import add_days, flt, unique
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+import math
 
 
 class EmployeeBoardingController(Document):
@@ -184,7 +185,7 @@ def update_employee_boarding_status(project, event=None):
 	status = "Pending"
 	if flt(project.percent_complete) > 0.0 and flt(project.percent_complete) < 100.0:
 		status = "In Process"
-	elif flt(project.percent_complete) == 100.0:
+	elif math.isclose(flt(project.percent_complete), 100.0, rel_tol=1e-09, abs_tol=0.0):
 		status = "Completed"
 
 	if employee_onboarding:
